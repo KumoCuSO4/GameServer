@@ -9,6 +9,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @EnableCaching  // 开启缓存
@@ -53,16 +54,17 @@ public class RedisConfig extends CachingConfigurerSupport {
      * @return RedisTemplate
      */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, ?> redisTemplate() {
         /*
             1.创建 RedisTemplate: 这是 Spring 用于与 Redis 交互的核心类，简化了与 Redis 的交互。
             2.设置连接工厂: 使用前面定义的 LettuceConnectionFactory。
             3.设置序列化器: 设置键和值的序列化器，这里使用 StringRedisSerializer 来将键和值序列化为字符串。
          */
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        RedisTemplate<String, ?> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());  // 设置连接工厂
+        template.setEnableTransactionSupport(true);
         template.setKeySerializer(new StringRedisSerializer());  // 设置键的序列化器
-        template.setValueSerializer(new StringRedisSerializer()); // 设置值的序列化器
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // 设置值的序列化器
         return template;
     }
 }
