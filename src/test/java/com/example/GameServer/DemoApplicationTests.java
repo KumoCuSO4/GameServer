@@ -34,19 +34,4 @@ class DemoApplicationTests {
 		userList.forEach(System.out::println);
 	}
 
-
-	@Autowired
-	private UserService userService;
-
-	@Test
-	public void testUserService() {
-		System.out.println(("----- UserService method test ------"));
-		UserPO userPO = new UserPO();
-		userPO.setName("abc");
-		int id = userService.addUser(userPO);
-		System.out.println(id);
-		UserPO userPO1 = userService.getUserById(1);
-		System.out.println(userPO1.toString());
-	}
-
 }

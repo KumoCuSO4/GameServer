@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "com.example.GameServer"; // Java 包名（可选）
+option java_outer_classname = "MessagesProto";   // Java 外部类名（可选）
+option java_generic_services = true;
+
+service UserService{
+  rpc getUserById (getUserByID_req) returns (getUserByID_res);
+}
+
+message getUserByID_req{
+  int32 id = 1;
+}
+
+message getUserByID_res{
+  int32 id = 1;
+  string name = 2;
+}
