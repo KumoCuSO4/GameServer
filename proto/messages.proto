@@ -4,15 +4,48 @@ option java_package = "com.example.GameServer"; // Java 包名（可选）
 option java_outer_classname = "MessagesProto";   // Java 外部类名（可选）
 option java_generic_services = true;
 
-service UserService{
-  rpc getUserById (getUserByID_req) returns (getUserByID_res);
+service PlayerService{
+  rpc register (register_req) returns (register_res);
+  rpc getPlayerByUid (getPlayerByUid_req) returns (getPlayerByUid_res);
+  rpc playerGetItem (playerGetItem_req) returns (playerGetItem_res);
+  rpc getItemList (getItemList_req) returns (getItemList_res);
 }
 
-message getUserByID_req{
-  int32 id = 1;
+message register_req{
+  string name = 1;
+}
+message register_res{
+  bool success = 1;
+  optional int32 uid = 2;
 }
 
-message getUserByID_res{
-  int32 id = 1;
+message getPlayerByUid_req{
+  int32 uid = 1;
+}
+message getPlayerByUid_res{
+  int32 uid = 1;
   string name = 2;
+}
+
+message playerGetItem_req{
+  int32 uid = 1;
+  int32 item_id = 2;
+  int32 item_num = 3;
+}
+message playerGetItem_res{
+  bool success = 1;
+  int32 item_id = 2;
+  int32 item_num = 3;
+}
+
+message getItemList_req{
+  int32 uid = 1;
+}
+message getItemList_res{
+  repeated player_item info = 1;
+}
+message player_item{
+  int32 uid = 1;
+  int32 item_id = 2;
+  int32 item_num = 3;
 }
