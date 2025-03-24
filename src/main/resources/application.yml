@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8083
 grpc:
   server:
     port: 8082
@@ -16,3 +16,24 @@ spring:
       host: 127.0.0.1
       port: 6379
       database: 0
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: player-register-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer
+      properties:
+        spring.json.trusted.packages: "*"    # 允许反序列化所有包
+    properties:
+      schema:
+        registry:
+          url: http://localhost:8081
+
+snowflake:
+  worker-id: 1
+  datacenter-id: 1

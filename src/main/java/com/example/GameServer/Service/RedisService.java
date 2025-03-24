@@ -1,4 +1,4 @@
-package com.example.GameServer.service;
+package com.example.GameServer.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

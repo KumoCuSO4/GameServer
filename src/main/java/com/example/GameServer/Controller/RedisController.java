@@ -1,6 +1,6 @@
-package com.example.GameServer.controller;
+package com.example.GameServer.Controller;
 
-import com.example.GameServer.service.RedisService;
+import com.example.GameServer.Service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

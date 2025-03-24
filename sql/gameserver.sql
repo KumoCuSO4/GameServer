@@ -10,19 +10,20 @@ USE gameserver;
 -- ----------------------------
 DROP TABLE IF EXISTS `player`;
 CREATE TABLE `player`  (
-                         `uid` int(11) NOT NULL AUTO_INCREMENT,
+                         `uid` BIGINT(11) NOT NULL,
                          `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                         `email` varchar(255) NOT NULL,
                          PRIMARY KEY (`uid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-INSERT INTO `player` values (1, "admin1");
-INSERT INTO `player` values (2, "admin2");
+INSERT INTO `player` values (1, "admin1", "12345678@test.com");
+INSERT INTO `player` values (2, "admin2", "12345677@test.com");
 
 -- ----------------------------
 -- Table structure for player_item
 -- ----------------------------
 DROP TABLE IF EXISTS `player_item`;
 CREATE TABLE `player_item`  (
-                           `uid` int(11) NOT NULL,
+                           `uid` BIGINT(11) NOT NULL,
                            `item_id` int(11) NOT NULL,
                            `num` int(11) NOT NULL,
                            INDEX `uid_item`(`uid`) USING BTREE

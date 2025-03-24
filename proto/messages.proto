@@ -13,39 +13,47 @@ service PlayerService{
 
 message register_req{
   string name = 1;
+  string email = 2;
 }
 message register_res{
-  bool success = 1;
-  optional int32 uid = 2;
+  int64 uid = 1;
 }
 
 message getPlayerByUid_req{
-  int32 uid = 1;
+  int64 uid = 1;
 }
 message getPlayerByUid_res{
-  int32 uid = 1;
+  int64 uid = 1;
   string name = 2;
+  string email = 3;
 }
 
 message playerGetItem_req{
-  int32 uid = 1;
+  int64 uid = 1;
   int32 item_id = 2;
   int32 item_num = 3;
 }
 message playerGetItem_res{
-  bool success = 1;
-  int32 item_id = 2;
-  int32 item_num = 3;
+  int32 item_id = 1;
+  int32 item_num = 2;
 }
 
 message getItemList_req{
-  int32 uid = 1;
+  int64 uid = 1;
 }
 message getItemList_res{
   repeated player_item info = 1;
 }
 message player_item{
-  int32 uid = 1;
+  int64 uid = 1;
   int32 item_id = 2;
   int32 item_num = 3;
+}
+
+// event
+
+message register_event{
+  int64 uid = 1;
+  string name = 2;
+  string email = 3;
 }
