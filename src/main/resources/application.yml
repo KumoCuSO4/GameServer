@@ -25,6 +25,8 @@ spring:
         spring.json.add.type.headers: false
     consumer:
       group-id: player-register-group
+      enable-auto-commit: false
+      max-poll-records: 2000
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer
       properties:
@@ -33,7 +35,10 @@ spring:
       schema:
         registry:
           url: http://localhost:8081
-
+    listener:
+      type: batch
+      ack-mode: MANUAL_IMMEDIATE  # 启用手动提交
+      concurrency: 5
 snowflake:
   worker-id: 1
   datacenter-id: 1

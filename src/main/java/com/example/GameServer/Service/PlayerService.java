@@ -1,6 +1,7 @@
 package com.example.GameServer.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.example.GameServer.MessagesProto;
 import com.example.GameServer.PlayerServiceGrpc;
@@ -74,27 +75,53 @@ public class PlayerService extends PlayerServiceGrpc.PlayerServiceImplBase {
         String emailKey = "player:email:" + request.getEmail();
         Boolean locked = redisTemplate.opsForValue()
                 .setIfAbsent(emailKey, "lock", 30, TimeUnit.SECONDS);
-        System.out.println(locked);
-        if (locked != null && locked) {
+
+        if (locked == null) {
+            log.error("Redis connection failed for email: {}", request.getEmail());
+            responseObserver.onError(Status.UNAVAILABLE.withDescription("Service unavailable").asRuntimeException());
+            return;
+        }
+
+        if (locked) {
+            if (playerMapper.selectCount(
+                    new QueryWrapper<PlayerPO>().eq("email", request.getEmail())
+            ) > 0) {
+//                responseObserver.onError(Status.ALREADY_EXISTS
+//                        .withDescription("Email already exists (db check)")
+//                        .asRuntimeException());
+                responseObserver.onNext(MessagesProto.register_res.newBuilder()
+                        .setStatus(1)
+                        .setMessage("Email already exists (db check)")
+                        .build());
+                responseObserver.onCompleted();
+                return;
+            }
             try {
                 long uid = idWorker.nextId();
                 // 进入消息队列
                 kafkaTemplate.send("player-register-topic", request);
                 responseObserver.onNext(MessagesProto.register_res.newBuilder()
-                                .setUid(uid)
+                        .setStatus(0)
+                        .setUid(uid)
                         .build());
+                responseObserver.onCompleted();
             } catch (Exception e) {
+                log.error(e.getMessage());
                 redisTemplate.delete(emailKey);
                 responseObserver.onError(Status.INTERNAL
                         .withDescription("Registration failed")
                         .asRuntimeException());
-            } finally {
-                responseObserver.onCompleted();
             }
         } else {
-            responseObserver.onError(Status.ALREADY_EXISTS
-                    .withDescription("Email already exists")
-                    .asRuntimeException());
+            log.info("PlayerService:register() cache exist: " + request.getEmail());
+            responseObserver.onNext(MessagesProto.register_res.newBuilder()
+                    .setStatus(1)
+                    .setMessage("Email already exists")
+                    .build());
+            responseObserver.onCompleted();
+//            responseObserver.onError(Status.ALREADY_EXISTS
+//                    .withDescription("Email already exists")
+//                    .asRuntimeException());
         }
     }
 

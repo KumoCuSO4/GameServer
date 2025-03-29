@@ -13,7 +13,8 @@ CREATE TABLE `player`  (
                          `uid` BIGINT(11) NOT NULL,
                          `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
                          `email` varchar(255) NOT NULL,
-                         PRIMARY KEY (`uid`) USING BTREE
+                         PRIMARY KEY (`uid`) USING BTREE,
+                         UNIQUE KEY `idx_email_unique` (`email`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 INSERT INTO `player` values (1, "admin1", "12345678@test.com");
 INSERT INTO `player` values (2, "admin2", "12345677@test.com");
