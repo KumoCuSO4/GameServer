@@ -1,0 +1,107 @@
+syntax = "proto3";
+option go_package="./;main";
+option java_package = "com.example.GameServer"; // Java 包名（可选）
+option java_outer_classname = "MessagesProto";   // Java 外部类名（可选）
+option java_generic_services = true;
+
+service PlayerService{
+  rpc register (register_req) returns (register_res);
+  rpc getPlayerByUid (getPlayerByUid_req) returns (getPlayerByUid_res);
+  rpc playerGetItem (playerGetItem_req) returns (playerGetItem_res);
+  rpc getItemList (getItemList_req) returns (getItemList_res);
+}
+
+service MarketService {
+  rpc placeOrder(placeOrder_req) returns (placeOrder_res);
+  rpc getMarketDepth(getMarketDepth_req) returns (getMarketDepth_res);
+}
+
+message register_req{
+  string name = 1;
+  string email = 2;
+}
+message register_res{
+  int32 status = 1;
+  optional int64 uid = 2;
+  optional string message = 3;
+}
+
+message getPlayerByUid_req{
+  int64 uid = 1;
+}
+message getPlayerByUid_res{
+  int64 uid = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message playerGetItem_req{
+  int64 uid = 1;
+  int32 item_id = 2;
+  int32 item_num = 3;
+}
+message playerGetItem_res{
+  int32 item_id = 1;
+  int32 item_num = 2;
+}
+
+message getItemList_req{
+  int64 uid = 1;
+}
+message getItemList_res{
+  repeated player_item info = 1;
+}
+message player_item{
+  int64 uid = 1;
+  int32 item_id = 2;
+  int32 item_num = 3;
+}
+
+// event
+
+message register_event{
+  int64 uid = 1;
+  string name = 2;
+  string email = 3;
+}
+
+
+
+enum OrderType {
+  BUY = 0;
+  SELL = 1;
+}
+
+message placeOrder_req {
+  string item_id = 1;
+  OrderType type = 2;
+  int32 quantity = 3;
+  int32 price = 4;
+}
+
+message placeOrder_res {
+  int64 order_id = 1;
+  OrderStatus status = 2;
+}
+
+enum OrderStatus {
+  PENDING = 0;
+  PARTIAL_FILLED = 1;
+  FILLED = 2;
+  CANCELLED = 3;
+}
+
+message getMarketDepth_req {
+  string item_id = 1;
+  int32 limit = 2;
+}
+
+message getMarketDepth_res {
+  repeated OrderEntry bids = 1;
+  repeated OrderEntry asks = 2;
+}
+
+message OrderEntry {
+  int32 price = 1;
+  int32 quantity = 2;
+}

@@ -1,0 +1,1 @@
+ghz --insecure --proto ./messages.proto -d "{\"name\":\"111\",\"email\":\"111@test.com\"}" --call PlayerService.register -O html -o output.html 172.19.240.91:8082
